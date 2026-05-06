@@ -4,6 +4,12 @@ import { fetchThread } from "@/lib/api";
 import { WorkflowBar } from "./WorkflowBar";
 import type { Campaign } from "@/lib/types";
 
+const STATUS_CONFIG: Record<string, { color: string; bg: string; dot: string }> = {
+  active:    { color: "#10B981", bg: "#ECFDF5", dot: "#10B981" },
+  completed: { color: "#64748B", bg: "#F1F5F9", dot: "#94A3B8" },
+  planned:   { color: "#F59E0B", bg: "#FFFBEB", dot: "#F59E0B" },
+};
+
 export function CampaignOverviewHeader({ code }: { code: string }) {
   const [campaign, setCampaign] = useState<Campaign | null>(null);
 
@@ -11,34 +17,22 @@ export function CampaignOverviewHeader({ code }: { code: string }) {
     fetchThread(code).then((d) => setCampaign(d.campaign)).catch(console.error);
   }, [code]);
 
-  const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-    active: { bg: "#E0F3F5", text: "#007B8A" },
-    completed: { bg: "#F3F4F6", text: "#6B7280" },
-    planned: { bg: "#FEF9C3", text: "#A16207" },
-  };
+  const sc = STATUS_CONFIG[campaign?.status ?? "planned"];
 
   return (
-    <header style={{ padding: "16px 32px", borderBottom: "1px solid #E5E0D8", backgroundColor: "#fff", flexShrink: 0 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-        <span style={{ fontFamily: "monospace", fontSize: 11, backgroundColor: "#E0F3F5", color: "#007B8A", padding: "2px 8px", borderRadius: 4 }}>
+    <header style={{ padding: "20px 28px 16px", borderBottom: "1px solid var(--border)", backgroundColor: "var(--bg)", flexShrink: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+        <span style={{ fontFamily: "monospace", fontSize: 11, color: "var(--text-muted)", backgroundColor: "var(--bg-secondary)", padding: "3px 8px", borderRadius: 4, border: "1px solid var(--border)", fontWeight: 500 }}>
           {code}
         </span>
-        <h2 style={{ fontFamily: "Georgia, serif", fontSize: 20, fontWeight: 600, color: "#2C2C2C", margin: 0 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: "var(--text-primary)", letterSpacing: "-0.3px" }}>
           {campaign?.name ?? "Loading…"}
         </h2>
         {campaign && (
-          <span style={{
-            marginLeft: "auto",
-            fontSize: 11,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            padding: "3px 8px",
-            borderRadius: 9999,
-            backgroundColor: STATUS_COLORS[campaign.status]?.bg ?? "#F3F4F6",
-            color: STATUS_COLORS[campaign.status]?.text ?? "#6B7280",
-          }}>
-            {campaign.status}
-          </span>
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6, backgroundColor: sc.bg, padding: "4px 10px", borderRadius: 20 }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: sc.dot }} />
+            <span style={{ fontSize: 11, fontWeight: 600, color: sc.color, textTransform: "capitalize" }}>{campaign.status}</span>
+          </div>
         )}
       </div>
       {campaign && <WorkflowBar currentStep={campaign.workflow_step} />}

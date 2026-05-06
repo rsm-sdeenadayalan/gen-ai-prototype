@@ -3,43 +3,83 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-border: var(--border);
-  --color-muted: var(--muted);
-  --color-card: var(--card);
+:root {
+  /* Sidebar */
+  --sidebar-bg: #0F172A;
+  --sidebar-border: #1E293B;
+  --sidebar-text: #94A3B8;
+  --sidebar-text-active: #F1F5F9;
+  --sidebar-hover: #1E293B;
+  --sidebar-active: #1E293B;
 
-  /* Macy's brand colors */
-  --color-teal-600: #007B8A;
-  --color-teal-700: #006370;
-  --color-teal-100: #E0F3F5;
-  --color-cream: #F9F6F1;
-  --color-charcoal: #2C2C2C;
-  --color-muted-text: #6B6B6B;
-  --color-border-warm: #E5E0D8;
-  --color-agent-bg: #EEF8F9;
-  --color-human-bg: #FFFFFF;
-  --color-flag-red: #D9534F;
-  --color-flag-yellow: #F0AD4E;
-  --color-flag-green: #5CB85C;
+  /* Content */
+  --bg: #FFFFFF;
+  --bg-secondary: #F8FAFC;
+  --bg-tertiary: #F1F5F9;
+  --border: #E2E8F0;
+  --border-strong: #CBD5E1;
+
+  /* Text */
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+
+  /* Accent */
+  --accent: #0284C7;
+  --accent-light: #E0F2FE;
+  --accent-dark: #0369A1;
+
+  /* Agent */
+  --agent-bg: #F0F9FF;
+  --agent-border: #BAE6FD;
+
+  /* Status */
+  --green: #10B981;
+  --yellow: #F59E0B;
+  --red: #EF4444;
+
+  --radius: 6px;
 }
 
-:root {
-  --background: #F9F6F1;
-  --foreground: #2C2C2C;
-  --card: #FFFFFF;
-  --border: #E5E0D8;
-  --muted: #6B6B6B;
-  --radius: 0.5rem;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.scrollbar-thin::-webkit-scrollbar { width: 4px; }
-.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-.scrollbar-thin::-webkit-scrollbar-thumb { background: #D0C8BC; border-radius: 2px; }
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease forwards;
+}

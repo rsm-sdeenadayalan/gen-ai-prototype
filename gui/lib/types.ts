@@ -136,7 +136,6 @@ export interface SkillMeta {
   address: string;
   label: string;
   description: string;
-  icon: string;
   workflowStep: number;
 }
 
@@ -146,8 +145,7 @@ export const SKILL_META: SkillMeta[] = [
     skillName: "segment",
     address: "segment.builder@macys-ai.com",
     label: "Audience Segmentation",
-    description: "RFM k-means clustering — find the right customers to target",
-    icon: "👥",
+    description: "RFM k-means clustering across 50K customers — identify VIP, mid-tier, and lapsed segments",
     workflowStep: 2,
   },
   {
@@ -155,8 +153,7 @@ export const SKILL_META: SkillMeta[] = [
     skillName: "dam",
     address: "dam.finder@macys-ai.com",
     label: "Creative Assets",
-    description: "Filter & rank 5,000 DAM assets — find clean hero images",
-    icon: "🖼️",
+    description: "Filter & rank 5,000 DAM assets — strips degraded, expired, and low-res files automatically",
     workflowStep: 4,
   },
   {
@@ -164,8 +161,7 @@ export const SKILL_META: SkillMeta[] = [
     skillName: "creative",
     address: "creative@macys-ai.com",
     label: "Creative Concepts",
-    description: "Visual mood board — Unsplash photos matched to campaign mood",
-    icon: "✨",
+    description: "Visual concept board — photo search matched to campaign mood and tone",
     workflowStep: 5,
   },
   {
@@ -173,8 +169,7 @@ export const SKILL_META: SkillMeta[] = [
     skillName: "localize",
     address: "localize@macys-ai.com",
     label: "Localization",
-    description: "40 regional variants — 10 US regions × 4 placements",
-    icon: "🗺️",
+    description: "Generate 40 regional variants — 10 US markets × 4 ad placements with regional pricing",
     workflowStep: 7,
   },
   {
@@ -183,7 +178,6 @@ export const SKILL_META: SkillMeta[] = [
     address: "performance@macys-ai.com",
     label: "Performance & Forecast",
     description: "Channel attribution, ROAS, and 14-day revenue forecast",
-    icon: "📈",
     workflowStep: 9,
   },
 ];
