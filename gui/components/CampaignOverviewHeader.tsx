@@ -35,6 +35,12 @@ export function CampaignOverviewHeader({ code }: { code: string }) {
           </div>
         )}
       </div>
+      {campaign?.brief && (
+        <div style={{ marginBottom: 14, padding: "10px 14px", backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border)", borderRadius: 8, borderLeft: "3px solid var(--accent)" }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 4px 0" }}>Campaign Brief</p>
+          <p style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.6, margin: 0 }}>{campaign.brief}</p>
+        </div>
+      )}
       {campaign && <WorkflowBar currentStep={campaign.workflow_step} />}
     </header>
   );

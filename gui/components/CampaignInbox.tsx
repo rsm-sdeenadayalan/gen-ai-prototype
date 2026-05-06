@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Users, ImageIcon, Sparkles, Globe, TrendingUp, ChevronRight } from "lucide-react";
+import { Users, ImageIcon, Sparkles, Globe, TrendingUp, ChevronRight, Plus } from "lucide-react";
 import { fetchCampaigns } from "@/lib/api";
 import type { Campaign } from "@/lib/types";
 import { SKILL_META } from "@/lib/types";
+import { NewCampaignModal } from "./NewCampaignModal";
 
 const SKILL_ICONS: Record<string, React.FC<{ size?: number; strokeWidth?: number }>> = {
   segment: ({ size = 14, strokeWidth = 1.8 }) => <Users size={size} strokeWidth={strokeWidth} />,
@@ -22,12 +23,15 @@ const STATUS_DOT: Record<string, string> = {
 
 export function CampaignInbox({ activeCode, activeSkill }: { activeCode?: string; activeSkill?: string }) {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchCampaigns().then(setCampaigns).catch(console.error);
-  }, []);
+  }, [showModal]);
 
   return (
+    <>
+    {showModal && <NewCampaignModal onClose={() => setShowModal(false)} />}
     <aside style={{
       width: 248,
       flexShrink: 0,
@@ -52,9 +56,20 @@ export function CampaignInbox({ activeCode, activeSkill }: { activeCode?: string
 
       {/* Nav */}
       <nav style={{ flex: 1, overflowY: "auto", padding: "8px 0" }}>
-        <p style={{ fontSize: 10, fontWeight: 600, color: "#475569", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 16px 4px" }}>
-          Campaigns
-        </p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 16px 4px" }}>
+          <p style={{ fontSize: 10, fontWeight: 600, color: "#475569", textTransform: "uppercase", letterSpacing: "0.08em", margin: 0 }}>
+            Campaigns
+          </p>
+          <button
+            onClick={() => setShowModal(true)}
+            title="New Campaign"
+            style={{ background: "none", border: "none", cursor: "pointer", color: "#475569", display: "flex", alignItems: "center", padding: 2, borderRadius: 4 }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = "#94A3B8"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = "#475569"; }}
+          >
+            <Plus size={14} />
+          </button>
+        </div>
 
         {campaigns.map((c) => {
           const isActive = activeCode === c.code;
@@ -139,5 +154,6 @@ export function CampaignInbox({ activeCode, activeSkill }: { activeCode?: string
         <span style={{ fontSize: 11, color: "#475569" }}>MGT 449 · Group 4</span>
       </div>
     </aside>
+    </>
   );
 }

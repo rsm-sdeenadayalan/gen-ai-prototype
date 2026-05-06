@@ -3,6 +3,7 @@ export interface Campaign {
   name: string;
   status: "planned" | "active" | "completed";
   workflow_step: number;
+  brief?: string | null;
   created_at: string;
 }
 

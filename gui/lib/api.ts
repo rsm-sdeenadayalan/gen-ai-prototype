@@ -20,6 +20,13 @@ export const fetchCampaigns = (): Promise<Campaign[]> => req("/api/campaigns");
 export const fetchThread = (code: string): Promise<ThreadResponse> =>
   req(`/api/campaigns/${code}`);
 
+export const createCampaign = (payload: {
+  name: string;
+  brief: string;
+  status: string;
+}): Promise<Campaign> =>
+  req("/api/campaigns", { method: "POST", body: JSON.stringify(payload) });
+
 export const sendEmail = (payload: {
   campaign_code: string;
   from_persona: string;

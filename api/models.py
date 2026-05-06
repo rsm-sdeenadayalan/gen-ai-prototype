@@ -2,6 +2,12 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 
+class CreateCampaignRequest(BaseModel):
+    name: str
+    brief: str
+    status: str = "planned"
+
+
 class SendEmailRequest(BaseModel):
     campaign_code: str
     from_persona: str
@@ -26,6 +32,7 @@ class CampaignOut(BaseModel):
     name: str
     status: str
     workflow_step: int
+    brief: str | None = None
     created_at: str
 
 

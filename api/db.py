@@ -53,12 +53,45 @@ def get_macys_conn() -> sqlite3.Connection:
 def init_app_db() -> None:
     with get_app_conn() as conn:
         conn.executescript(SCHEMA)
+        # Add brief column if it doesn't exist yet (migration-safe)
+        try:
+            conn.execute("ALTER TABLE campaigns ADD COLUMN brief TEXT")
+        except sqlite3.OperationalError:
+            pass
         now = datetime.now(timezone.utc).isoformat()
         for code, name, status, step in SEED:
             conn.execute(
                 "INSERT OR IGNORE INTO campaigns (code, name, status, workflow_step, created_at) VALUES (?,?,?,?,?)",
                 (code, name, status, step, now),
             )
+
+
+def generate_campaign_code(name: str) -> str:
+    import re
+    year = datetime.now(timezone.utc).year
+    words = [w for w in re.findall(r"[A-Za-z]+", name) if len(w) > 2][:2]
+    initials = "".join(w[0].upper() for w in words) if words else "XX"
+    initials = (initials + "X")[:2]
+    with get_app_conn() as conn:
+        count = conn.execute("SELECT COUNT(*) FROM campaigns").fetchone()[0]
+    return f"MDC-{year}-{initials}-{count + 1:03d}"
+
+
+def create_campaign(name: str, brief: str, status: str) -> dict:
+    code = generate_campaign_code(name)
+    now = datetime.now(timezone.utc).isoformat()
+    with get_app_conn() as conn:
+        conn.execute(
+            "INSERT INTO campaigns (code, name, status, workflow_step, brief, created_at) VALUES (?,?,?,?,?,?)",
+            (code, name, status, 1, brief, now),
+        )
+        if brief:
+            conn.execute(
+                "INSERT INTO messages (campaign_code, from_persona, to_address, body, created_at) VALUES (?,?,?,?,?)",
+                (code, "sarah", "campaign.brief@macys-ai.com", brief, now),
+            )
+        row = conn.execute("SELECT * FROM campaigns WHERE code=?", (code,)).fetchone()
+    return dict(row)
 
 
 def list_campaigns() -> list[dict]:
