@@ -20,6 +20,18 @@ export const fetchCampaigns = (): Promise<Campaign[]> => req("/api/campaigns");
 export const fetchThread = (code: string): Promise<ThreadResponse> =>
   req(`/api/campaigns/${code}`);
 
+export const triggerStep = (code: string): Promise<{ ok: boolean; campaign: Campaign; agent_reply: unknown }> =>
+  req(`/api/campaigns/${code}/step/trigger`, { method: "POST" });
+
+export const approveStep = (code: string): Promise<Campaign> =>
+  req(`/api/campaigns/${code}/step/approve`, { method: "POST" });
+
+export const reviseStep = (code: string): Promise<Campaign> =>
+  req(`/api/campaigns/${code}/step/revise`, { method: "POST" });
+
+export const advanceStep = (code: string, note = ""): Promise<Campaign> =>
+  req(`/api/campaigns/${code}/step/advance`, { method: "POST", body: JSON.stringify({ note }) });
+
 export const createCampaign = (payload: {
   name: string;
   brief: string;

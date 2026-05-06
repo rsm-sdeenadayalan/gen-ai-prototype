@@ -33,6 +33,7 @@ class CampaignOut(BaseModel):
     status: str
     workflow_step: int
     brief: str | None = None
+    step_state: str = "pending"
     created_at: str
 
 

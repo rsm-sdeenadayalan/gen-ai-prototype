@@ -4,8 +4,22 @@ export interface Campaign {
   status: "planned" | "active" | "completed";
   workflow_step: number;
   brief?: string | null;
+  step_state: string;
   created_at: string;
 }
+
+export const STEPS_META: Record<number, { name: string; type: "ai" | "human" }> = {
+  1:  { name: "Briefing",          type: "human" },
+  2:  { name: "Segmentation",      type: "ai" },
+  3:  { name: "SKU Selection",     type: "human" },
+  4:  { name: "Creative Assets",   type: "ai" },
+  5:  { name: "Creative Concepts", type: "ai" },
+  6:  { name: "Campaign Approval", type: "human" },
+  7:  { name: "Localization",      type: "ai" },
+  8:  { name: "Activation",        type: "human" },
+  9:  { name: "Performance",       type: "ai" },
+  10: { name: "Reporting",         type: "human" },
+};
 
 export interface Message {
   id: number;

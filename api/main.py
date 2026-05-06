@@ -6,7 +6,7 @@ load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.db import init_app_db
-from api.routes import campaigns, emails
+from api.routes import campaigns, emails, workflow
 
 
 @asynccontextmanager
@@ -33,3 +33,4 @@ def health():
 
 app.include_router(campaigns.router)
 app.include_router(emails.router)
+app.include_router(workflow.router)
