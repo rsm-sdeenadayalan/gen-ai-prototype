@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { fetchCampaigns } from "@/lib/api";
 import type { Campaign } from "@/lib/types";
+import { SKILL_META } from "@/lib/types";
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   active: { bg: "#E0F3F5", text: "#007B8A" },
@@ -10,7 +11,13 @@ const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   completed: { bg: "#F3F4F6", text: "#6B7280" },
 };
 
-export function CampaignInbox({ activeCode }: { activeCode?: string }) {
+export function CampaignInbox({
+  activeCode,
+  activeSkill,
+}: {
+  activeCode?: string;
+  activeSkill?: string;
+}) {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
   useEffect(() => {
@@ -19,7 +26,7 @@ export function CampaignInbox({ activeCode }: { activeCode?: string }) {
 
   return (
     <aside style={{
-      width: 280,
+      width: 260,
       flexShrink: 0,
       borderRight: "1px solid #E5E0D8",
       backgroundColor: "#FFFFFF",
@@ -37,47 +44,86 @@ export function CampaignInbox({ activeCode }: { activeCode?: string }) {
       </header>
 
       <nav style={{ flex: 1, overflowY: "auto", padding: "8px 0" }}>
-        {campaigns.map((c) => (
-          <Link
-            key={c.code}
-            href={`/${c.code}`}
-            style={{
-              display: "block",
-              padding: "12px 16px",
-              borderLeft: `2px solid ${activeCode === c.code ? "#007B8A" : "transparent"}`,
-              backgroundColor: activeCode === c.code ? "#F9F6F1" : "transparent",
-              textDecoration: "none",
-              transition: "background-color 0.15s",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
-              <div style={{ minWidth: 0 }}>
-                <p style={{ fontSize: 10, fontFamily: "monospace", color: "#6B6B6B", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.code}</p>
-                <p style={{ fontSize: 13, fontWeight: 600, color: "#2C2C2C", margin: "2px 0 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {c.name}
-                </p>
-              </div>
-              <span style={{
-                fontSize: 9,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                padding: "2px 6px",
-                borderRadius: 9999,
-                flexShrink: 0,
-                backgroundColor: STATUS_COLORS[c.status]?.bg ?? "#F3F4F6",
-                color: STATUS_COLORS[c.status]?.text ?? "#6B7280",
-              }}>
-                {c.status}
-              </span>
+        {campaigns.map((c) => {
+          const isActive = activeCode === c.code;
+          return (
+            <div key={c.code}>
+              {/* Campaign row */}
+              <Link
+                href={`/${c.code}`}
+                style={{
+                  display: "block",
+                  padding: "10px 16px",
+                  borderLeft: `2px solid ${isActive && !activeSkill ? "#007B8A" : "transparent"}`,
+                  backgroundColor: isActive && !activeSkill ? "#F9F6F1" : "transparent",
+                  textDecoration: "none",
+                  transition: "background-color 0.15s",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
+                  <div style={{ minWidth: 0 }}>
+                    <p style={{ fontSize: 10, fontFamily: "monospace", color: "#6B6B6B", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.code}</p>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: "#2C2C2C", margin: "2px 0 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {c.name}
+                    </p>
+                  </div>
+                  <span style={{
+                    fontSize: 9,
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    padding: "2px 6px",
+                    borderRadius: 9999,
+                    flexShrink: 0,
+                    backgroundColor: STATUS_COLORS[c.status]?.bg ?? "#F3F4F6",
+                    color: STATUS_COLORS[c.status]?.text ?? "#6B7280",
+                  }}>
+                    {c.status}
+                  </span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6 }}>
+                  <div style={{ flex: 1, height: 3, backgroundColor: "#E5E0D8", borderRadius: 2, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${(c.workflow_step / 10) * 100}%`, backgroundColor: "#007B8A", borderRadius: 2 }} />
+                  </div>
+                  <span style={{ fontSize: 9, color: "#6B6B6B" }}>{c.workflow_step}/10</span>
+                </div>
+              </Link>
+
+              {/* Skill sub-items — shown when this campaign is active */}
+              {isActive && (
+                <div style={{ borderLeft: "2px solid #E0F3F5", marginLeft: 16 }}>
+                  {SKILL_META.map((skill) => {
+                    const isSkillActive = activeSkill === skill.slug;
+                    return (
+                      <Link
+                        key={skill.slug}
+                        href={`/${c.code}/${skill.slug}`}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          padding: "7px 12px",
+                          textDecoration: "none",
+                          backgroundColor: isSkillActive ? "#EEF8F9" : "transparent",
+                          borderLeft: `2px solid ${isSkillActive ? "#007B8A" : "transparent"}`,
+                          marginLeft: -2,
+                          transition: "background-color 0.15s",
+                        }}
+                      >
+                        <span style={{ fontSize: 14 }}>{skill.icon}</span>
+                        <div style={{ minWidth: 0 }}>
+                          <p style={{ fontSize: 12, fontWeight: isSkillActive ? 700 : 500, color: isSkillActive ? "#007B8A" : "#2C2C2C", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {skill.label}
+                          </p>
+                          <p style={{ fontSize: 9, color: "#6B6B6B", margin: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>Step {skill.workflowStep}</p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 6 }}>
-              <div style={{ flex: 1, height: 4, backgroundColor: "#E5E0D8", borderRadius: 2, overflow: "hidden" }}>
-                <div style={{ height: "100%", width: `${(c.workflow_step / 10) * 100}%`, backgroundColor: "#007B8A", borderRadius: 2 }} />
-              </div>
-              <span style={{ fontSize: 9, color: "#6B6B6B" }}>{c.workflow_step}/10</span>
-            </div>
-          </Link>
-        ))}
+          );
+        })}
       </nav>
 
       <footer style={{ padding: "12px 16px", borderTop: "1px solid #E5E0D8", fontSize: 10, color: "#6B6B6B" }}>

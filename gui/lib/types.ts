@@ -129,3 +129,61 @@ export const PERSONA_COLORS: Record<string, string> = {
   diego: "#5A6B3A",
   anna: "#7B3F6E",
 };
+
+export interface SkillMeta {
+  slug: string;
+  skillName: string;
+  address: string;
+  label: string;
+  description: string;
+  icon: string;
+  workflowStep: number;
+}
+
+export const SKILL_META: SkillMeta[] = [
+  {
+    slug: "segment",
+    skillName: "segment",
+    address: "segment.builder@macys-ai.com",
+    label: "Audience Segmentation",
+    description: "RFM k-means clustering — find the right customers to target",
+    icon: "👥",
+    workflowStep: 2,
+  },
+  {
+    slug: "dam",
+    skillName: "dam",
+    address: "dam.finder@macys-ai.com",
+    label: "Creative Assets",
+    description: "Filter & rank 5,000 DAM assets — find clean hero images",
+    icon: "🖼️",
+    workflowStep: 4,
+  },
+  {
+    slug: "creative",
+    skillName: "creative",
+    address: "creative@macys-ai.com",
+    label: "Creative Concepts",
+    description: "Visual mood board — Unsplash photos matched to campaign mood",
+    icon: "✨",
+    workflowStep: 5,
+  },
+  {
+    slug: "localize",
+    skillName: "localize",
+    address: "localize@macys-ai.com",
+    label: "Localization",
+    description: "40 regional variants — 10 US regions × 4 placements",
+    icon: "🗺️",
+    workflowStep: 7,
+  },
+  {
+    slug: "performance",
+    skillName: "performance",
+    address: "performance@macys-ai.com",
+    label: "Performance & Forecast",
+    description: "Channel attribution, ROAS, and 14-day revenue forecast",
+    icon: "📈",
+    workflowStep: 9,
+  },
+];
